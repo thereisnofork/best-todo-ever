@@ -130,4 +130,10 @@ function RemoveRightClick(box, todo, text) {
       console.log(box);
     }
   });
+  document.addEventListener("click", (e) => {
+    if (e.target !== todo && e.target !== text) {
+      box.remove();
+      console.log(box);
+    }
+  });
 }
