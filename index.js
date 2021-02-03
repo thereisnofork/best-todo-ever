@@ -28,6 +28,8 @@ function addTODO() {
   newNote.displacement();
   newNote.rightClick();
 
+  RemoveRightClick(newNote.box, newNote.wrapeDIV, newNote.textDIV);
+
   input.value = "";
 }
 
@@ -43,6 +45,8 @@ class Todo {
   priorityDIV = document.createElement("div");
   dltDIV = document.createElement("i");
   lineDIV = document.createElement("div");
+
+  box = document.createElement("div");
 
   creatTodo() {
     this.wrapeDIV.id = "ONEtodo";
@@ -72,8 +76,8 @@ class Todo {
   }
 
   displacement() {
-    todoTable.appendChild(this.lineDIV);
-    todoTable.appendChild(this.wrapeDIV);
+    todoTable.prepend(this.wrapeDIV);
+    todoTable.prepend(this.lineDIV);
 
     this.checkboxDIV.addEventListener("change", () => {
       const elementHeight = this.wrapeDIV.getBoundingClientRect().height;
@@ -94,19 +98,36 @@ class Todo {
     });
   }
 
-  // rightClick() {
-  //   this.wrapeDIV.addEventListener("contextmenu", (e) => {
-  //     e.preventDefault();
+  rightClick() {
+    this.wrapeDIV.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
 
-  //     if (!body.hasChildNodes(this.box)) {
-  //       this.box = document.createElement("div");
-  //       this.box.id = "rightClickBox";
-  //       this.box.style.left = e.pageX + "px";
-  //       this.box.style.top = e.pageY + "px";
-  //       console.log(e);
-  //       body.appendChild(this.box);
-  //     }
-  //   });
-  // }
+      this.rightClickLogic(e);
+    });
+  }
+
+  rightClickLogic(e) {
+    if (body.querySelector("#rightClickBox") == null) {
+      this.box.id = "rightClickBox";
+
+      this.box.style.left = e.pageX + "px";
+      this.box.style.top = e.pageY + "px";
+      body.appendChild(this.box);
+    } else {
+      this.box.remove();
+      this.box.id = "rightClickBox";
+      this.box.style.left = e.pageX + "px";
+      this.box.style.top = e.pageY + "px";
+      body.appendChild(this.box);
+    }
+  }
 }
-// document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+function RemoveRightClick(box, todo, text) {
+  document.addEventListener("contextmenu", (e) => {
+    if (e.target !== todo && e.target !== text) {
+      box.remove();
+      console.log(box);
+    }
+  });
+}
